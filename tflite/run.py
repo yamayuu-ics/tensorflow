@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy
 from edgetpu.basic.basic_engine import BasicEngine
 
-MODEL_NAME = "model_stride/model_stride/model_stride_256x256x3_edgetpu.tflite"
+MODEL_NAME = "model_stride/model_stride_256x256x3_edgetpu.tflite"
 
 
 ### Load model and prepare TPU engine
