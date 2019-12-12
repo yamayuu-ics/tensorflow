@@ -5,43 +5,18 @@ import sys
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import numpy as np
 from PIL import Image
+from tqdm import tqdm
 
 import tensorflow as tf
+from tensorflow.keras import Model
 
 IMAGE_W = 256
 IMAGE_H = 256
 
 SEED = 20160923
 
-test = Image.open('/mnt/hdd1/ml_data/VOCdevkit/VOC2012/SegmentationClass/2007_000032.png')
+test = Image.open('./palette.png')
 palette = np.array(test.getpalette(), dtype=np.uint8).reshape(-1, 3) # パレットの取得
-
-def convert_to_rgb(index_colored_numpy, palette, n_colors=None):
-    assert index_colored_numpy.dtype == np.uint8 and palette.dtype == np.uint8
-    assert index_colored_numpy.ndim == 2 and palette.ndim == 2
-    assert palette.shape[1] == 3
-    if n_colors is None:
-        n_colors = palette.shape[0]
-    reduced = index_colored_numpy.copy()
-    reduced[index_colored_numpy > n_colors] = 0 # 不要なクラスを0とする
-    expanded_img = np.eye(n_colors, dtype=np.int32)[reduced]  # [H, W, n_colors] int32
-    use_pallete = palette[:n_colors].astype(np.int32)  # [n_colors, 3] int32
-    return np.dot(expanded_img, use_pallete).astype(np.uint8)
-
-
-def dbg_convert_tensr_to_idx_color_img(tensor,palette):
-    numpy_img = tensor.numpy()
-    num_img = numpy_img.shape[0]
-    out_img = []
-    for i in range(num_img):
-        color_img = convert_to_rgb(np.reshape(numpy_img[i],(IMAGE_H,IMAGE_W)),palette)
-        out_img.append(color_img)
-    
-    out_img = np.array(out_img)
-    return out_img
-
-
-
 
 print("tf ver : %s"%tf.__version__)
 
@@ -113,8 +88,10 @@ if __name__=='__main__':
 
     start = time.time()
 
-    for image,label in Loader.train_data:
-        pass
+
+    tbar = tqdm(Loader.train_data)
+    for image,label in tbar:
+        a = 1+1
         #print(image.shape)
         #print(label.shape)
 
